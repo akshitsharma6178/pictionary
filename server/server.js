@@ -6,8 +6,9 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
-const io = socketIO(server);
-
+const io = socketIO(server,{
+  cors: { origin: "http://127.0.0.1:5173" },
+});
 
 const onlineUsers = new Set();
 let drawerSocketId = null;
