@@ -1,25 +1,29 @@
-const express = require("express");
-const app = express();
-const http = require("http");
-const { Server } = require("socket.io");
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
 const cors = require("cors");
 
-app.use(cors);
-
+const app = express();
+app.use(cors());
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "http://127.0.0.1:5173" },
-});
+const io = socketIO(server);
 
-io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
 
-  socket.on("msg", (data) => {
+const onlineUsers = new Set();
+let drawerSocketId = null;
+
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('draw', (data) => {
+    console.log('draw');
     console.log(data);
-    io.emit("msg", data.text);
+    socket.broadcast.emit('draw', data);
   });
+
 });
 
-server.listen(3000, () => {
-  console.log("SERVER IS RUNNING");
+const port = 3001;
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
