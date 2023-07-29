@@ -9,6 +9,8 @@ const server = http.createServer(app);
 const io = socketIO(server,{
   cors: { origin: "http://127.0.0.1:5173" },
 });
+const wordBank = ["apple", "bananna", "orange"];
+let counter = 0;
 
 const onlineUsers = new Set();
 let drawerSocketId = null;
@@ -26,8 +28,20 @@ io.on('connection', (socket) => {
     console.log(data);
     io.emit("msg", data.text);
   });
-
+  socket.on("guess_word", (data) => {
+    if (data.msg === wordBank[counter % wordBank.length]) {
+      io.emit("new_msg", {
+        from: "Server",
+        msg: `${socket.id} guessed the word!`,
+      });
+      counter += 1;
+    } else {
+      console.log("sent");
+      io.emit("new_msg", data);
+    }
+  });
 });
+
 
 const port = 3001;
 server.listen(port, () => {
