@@ -21,6 +21,11 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('draw', data);
   });
 
+  socket.on("msg", (data) => {
+    console.log(data);
+    io.emit("msg", data.text);
+  });
+
 });
 
 const port = 3001;
