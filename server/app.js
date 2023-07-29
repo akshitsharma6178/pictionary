@@ -6,7 +6,11 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
-const io = socketIO(server);
+const io = socketIO(server,{
+    cors: {
+    origin: '*', // or "http://localhost:3000"
+    }
+});
 
 
 const onlineUsers = new Set();
